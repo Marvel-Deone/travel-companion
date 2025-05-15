@@ -1,5 +1,6 @@
 import Grid from "@mui/joy/Grid";
 import { CircularProgress, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import PlaceDetails from "./PlaceDetails";
 
 interface ListProps {
   isLoading: Boolean;
@@ -32,8 +33,6 @@ const List: React.FC<ListProps> = ({ isLoading, places, type, setType, rating, s
             <MenuItem value={4.5}>Above 5.0</MenuItem>
           </Select>
         </FormControl>
-        {/*  Array.isArray(places) && places.length > 0 ? (
-          places.map((place, i) => ( */}
         {isLoading ? (
           <div className="flex justify-center mt-4">
             <CircularProgress size="30px" />
@@ -43,8 +42,9 @@ const List: React.FC<ListProps> = ({ isLoading, places, type, setType, rating, s
             {Array.isArray(places) && places.length > 0 ? (
               places.map((place, i) => (
                 <Grid key={i} xs={12}>
-                  <h2>{place.name}</h2>
-                  <p>{place.description}</p>
+                  <PlaceDetails
+                    place={place}
+                  />
                 </Grid>
               )
               )) : (
@@ -52,7 +52,6 @@ const List: React.FC<ListProps> = ({ isLoading, places, type, setType, rating, s
             )}
           </Grid>
         )}
-        {/* Render place details here */}
       </>
 
 

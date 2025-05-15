@@ -31,14 +31,6 @@ const Map: React.FC<MapProps> = ({ setCoordinates, setBounds, coordinates, bound
     return round(a.lat) === round(b.lat) && round(a.lng) === round(b.lng);
   };
 
-  // const boundsEqual = (
-  //   b1: { ne: { lat: number; lng: number }; sw: { lat: number; lng: number } },
-  //   b2: typeof b1 | null
-  // ) => {
-  //   if (!b2) return false;
-  //   return coordsEqual(b1.ne, b2.ne) && coordsEqual(b1.sw, b2.sw);
-  // };
-
   const boundsEqual = (b1: { ne: { lat: number; lng: number }; sw: { lat: number; lng: number } }, b2: typeof b1 | null) => {
     if (!b2) return false;
     return (
@@ -53,43 +45,6 @@ const Map: React.FC<MapProps> = ({ setCoordinates, setBounds, coordinates, bound
     mapRef.current = map;
   };
 
-  // const onIdle = () => {
-  //   if (mapRef.current) {
-  //     const newCenter = mapRef.current.getCenter();
-  //     const newBounds = mapRef.current.getBounds();
-
-  //     if (newCenter && newBounds) {
-  //       const newCoords = {
-  //         lat: round(newCenter.lat()),
-  //         lng: round(newCenter.lng()),
-  //       };
-
-  //       const formattedBounds = {
-  //         ne: {
-  //           lat: round(newBounds.getNorthEast().lat()),
-  //           lng: round(newBounds.getNorthEast().lng()),
-  //         },
-  //         sw: {
-  //           lat: round(newBounds.getSouthWest().lat()),
-  //           lng: round(newBounds.getSouthWest().lng()),
-  //         },
-  //       };
-
-  //       if (!coordsEqual(newCoords, coordinates)) {
-  //         setCoordinates(newCoords);
-  //       }
-
-  //       if (!boundsEqual(formattedBounds, lastBoundsRef.current)) {
-  //         console.log("Fetching places with bounds:", formattedBounds);
-  //         console.log("Last bounds:", lastBoundsRef.current);
-  //         console.log("Current bounds:", bounds);
-  //         lastBoundsRef.current = formattedBounds;
-  //         setBoundsDebounced(formattedBounds);
-  //         // setBounds(formattedBounds);
-  //       }
-  //     }
-  //   }
-  // };
   const onIdle = () => {
     if (!mapRef.current) return;
 

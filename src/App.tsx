@@ -29,26 +29,20 @@ function App() {
 
   const fetchPlacesDebounced = useRef(
     debounce((type, sw, ne) => {
-      console.log("Calling API with:", type, sw, ne);
-      console.log('Hits me');
-
       getPlaceData(type, sw, ne)
         .then((data) => {
-          console.log("Fetched places:", data);
-          setPlaces(data);
+          setPlaces(data?.filter((place: { name: string }) => place.name));
         })
         .catch((error) => {
           console.error("Error fetching places:", error);
         })
         .finally(() => {
-          console.log('Hi');
           setIsLoading(false);
         });
     }, 500)
   ).current;
 
   useEffect(() => {
-    console.log('Bounds changed:', bounds);
     if (bounds?.sw && bounds?.ne) {
       setIsLoading(true); // ✅ trigger before debounce kicks in
       fetchPlacesDebounced(type, bounds.sw, bounds.ne);
@@ -59,7 +53,7 @@ function App() {
     <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLEMAP_API_KEY} libraries={['places']}>
       <Header />
       <Grid container spacing={3} style={{ width: '100%' }}>
-        <Grid xs={12} md={4}>
+        <Grid xs={12} md={5} lg={4}>
           <List
             isLoading={isLoading}
             places={places}
@@ -69,7 +63,7 @@ function App() {
             setRating={setRating}
           />
         </Grid>
-        <Grid xs={12} md={8}>
+        <Grid xs={12} md={7} lg={8}>
           <Map
             coordinates={coordinates}
             setCoordinates={setCoordinates}
