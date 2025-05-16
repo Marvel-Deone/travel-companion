@@ -3,10 +3,17 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
 
 interface PlaceDetailsProps {
-    place: any
+    place: any;
+    selected: boolean;
+    refProp: React.RefObject<any>;
 };
 
-const PlaceDetails: React.FC<PlaceDetailsProps> = ({ place }) => {
+const PlaceDetails: React.FC<PlaceDetailsProps> = ({ place, selected, refProp }) => {
+    console.log('selected:', selected, refProp);
+    if (selected) {
+        refProp?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
     return (
         <Card elevation={6}>
             <CardMedia

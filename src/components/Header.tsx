@@ -6,11 +6,18 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useState } from 'react';
 
 
-const Header = () => {
+const Header = ({ setCoordinates }: { setCoordinates: (coords: { lat: number; lng: number }) => void }) => {
     const [showSearch, setShowSearch] = useState<boolean>(false);
+    const [autoComplete, setAutocomplete] = useState<any>(null);
 
-    const onLoad = () => { }
-    const onPlaceChanged = () => { }
+    const onLoad = (autoC: any) => setAutocomplete(autoC)
+    const onPlaceChanged = () => { 
+        if (autoComplete) {
+            const lat = autoComplete.getPlace().geometry.location.lat();
+            const lng = autoComplete.getPlace().geometry.location.lng();
+            setCoordinates({ lat, lng });
+        }
+    }
 
     return (
         <>

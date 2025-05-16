@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+
+.map-marker {
+    position: absolute;
+    max-width: 100px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    transition: all 0.3s ease;
+    z-index: 1;
+  }
+  
+  .map-marker:hover {
+    max-width: 300px;
+    white-space: normal;
+    overflow: visible;
+    z-index: 999;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    background: white;
+  }

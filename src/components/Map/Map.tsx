@@ -1,5 +1,5 @@
-import { useMediaQuery } from "@mui/material";
-import { GoogleMap, Marker } from "@react-google-maps/api";
+import { Paper, Rating, Typography, useMediaQuery } from "@mui/material";
+import { GoogleMap, Marker, OverlayView } from "@react-google-maps/api";
 import { debounce } from "lodash";
 import React, { useRef } from "react";
 
@@ -8,9 +8,11 @@ interface MapProps {
   setBounds: (bounds: { ne: { lat: number; lng: number }; sw: { lat: number; lng: number } }) => void;
   coordinates: { lat: number; lng: number };
   bounds: { ne: { lat: number; lng: number }; sw: { lat: number; lng: number } } | null;
+  places?: any[];
+  setChildClicked: (i: number) => void;
 }
 
-const Map: React.FC<MapProps> = ({ setCoordinates, setBounds, coordinates, bounds }) => {
+const Map: React.FC<MapProps> = ({ setCoordinates, setBounds, coordinates, bounds, places, setChildClicked }) => {
   const isDesktop = useMediaQuery("(min-width: 600px)");
   const mapRef = useRef<google.maps.Map | null>(null);
   const lastBoundsRef = useRef<{ ne: { lat: number; lng: number }; sw: { lat: number; lng: number } } | null>(null);
@@ -23,7 +25,7 @@ const Map: React.FC<MapProps> = ({ setCoordinates, setBounds, coordinates, bound
 
   const round = (num: number) => Number(num.toFixed(5));
 
-  const DELTA = 0.002;      // ~200m of wiggle room
+  const DELTA = 0.002;
 
   const close = (a: number, b: number) => Math.abs(a - b) < DELTA;
 
@@ -72,6 +74,11 @@ const Map: React.FC<MapProps> = ({ setCoordinates, setBounds, coordinates, bound
     }
   };
 
+  const onChildClick = (i: number) => {
+    console.log('child clicked:', i);
+    setChildClicked(i);
+  }
+
   return (
     <div className="h-[55vh] w-full mt-[4.2rem]">
       <GoogleMap
@@ -81,7 +88,32 @@ const Map: React.FC<MapProps> = ({ setCoordinates, setBounds, coordinates, bound
         onLoad={onLoad}
         onIdle={onIdle}
       >
-        <Marker position={coordinates} />
+        {Array.isArray(places) && places?.map((place, i) => (
+          <Marker
+            key={i}
+            position={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
+          >
+            {isDesktop && (
+              <OverlayView
+                position={{ lat: Number(place.latitude), lng: Number(place.longitude) }}
+                mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+              >
+                <Paper elevation={3} sx={{ zIndex: 0 }} className="p-2.5 flex flex-col relative z-0 justify-center w-[100px] shrink transition-all duration-300 ease-in-out transform hover:scale-[1.1] hover:z-[1000] hover:shadow-xl">
+                  <Typography variant="subtitle2" gutterBottom>
+                    {place.name}
+                  </Typography>
+                  <img
+                    className="cursor-pointer h-[70px]"
+                    src={place.photo ? place.photo.images.large.url : 'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0'}
+                    alt={place.name}
+                    onClick={() => onChildClick(i)}
+                  />
+                  <Rating size="small" value={Number(place.rating)} readOnly />
+                </Paper>
+              </OverlayView>
+            )}
+          </Marker>
+        ))}
       </GoogleMap>
     </div>
   );

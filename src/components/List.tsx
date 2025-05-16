@@ -1,17 +1,53 @@
 import Grid from "@mui/joy/Grid";
 import { CircularProgress, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 import PlaceDetails from "./PlaceDetails";
+import { createRef, useCallback, useEffect, useRef, useState } from "react";
+import noDataImage from '../assets/images/no-data.svg'; // adjust the path based on your component location
+
 
 interface ListProps {
-  isLoading: Boolean;
+  isLoading: boolean;
   places: any[];
   type: string;
   setType: (value: string) => void;
   rating: string;
   setRating: (value: string) => void;
+  childClicked: number | null;
 };
 
-const List: React.FC<ListProps> = ({ isLoading, places, type, setType, rating, setRating }) => {
+const setRefs = (...refs: any[]) => (node: HTMLDivElement | null) => {
+  refs.forEach(ref => {
+    if (typeof ref === 'function') {
+      ref(node);
+    } else if (ref) {
+      ref.current = node;
+    }
+  })
+}
+
+const List: React.FC<ListProps> = ({ isLoading, places, type, setType, rating, setRating, childClicked }) => {
+  const [elRefs, setElRefs] = useState([]);
+  console.log('childClicked:', childClicked);
+
+  useEffect(() => {
+    setElRefs((refs) => Array(places?.length).fill(null).map((_, i) => refs[i] || createRef()))
+  }, [places]);
+
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const [visiblePlaces, setVisiblePlaces] = useState<number>(10);
+
+  const lastPlaceRef = useCallback((node: HTMLDivElement) => {
+    if (isLoading) return;
+    if (observerRef.current) observerRef.current.disconnect();
+
+    observerRef.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        setVisiblePlaces(prev => Math.min(prev + 10, entries.length));
+      }
+    });
+    if (node) observerRef.current.observe(node);
+  }, [isLoading, places.length]);
+
   return (
     <div className="mt-[4.2rem] p-[25px]">
       <Typography variant="h4" fontSize={20} marginBottom={4}>Returants, Hotels & Attractions around you</Typography>
@@ -40,15 +76,24 @@ const List: React.FC<ListProps> = ({ isLoading, places, type, setType, rating, s
         ) : (
           <Grid container spacing={3} className="h-[75vh] overflow-auto" sx={{ marginTop: '20px' }}>
             {Array.isArray(places) && places.length > 0 ? (
-              places.map((place, i) => (
-                <Grid key={i} xs={12}>
-                  <PlaceDetails
-                    place={place}
-                  />
-                </Grid>
-              )
+              places.slice(0, visiblePlaces).map((place, i) => {
+                const scrollRef = elRefs[i];
+                const isLastVisible = i === visiblePlaces - 1;
+                const comninedRef = isLastVisible ? setRefs(scrollRef, lastPlaceRef) : setRefs(scrollRef);
+                return (
+                  <Grid ref={comninedRef} key={i} xs={12}>
+                    <PlaceDetails
+                      place={place}
+                      selected={childClicked === i}
+                      refProp={scrollRef}
+                    />
+                  </Grid>
+                )
+              }
               )) : (
-              <h1>No places found</h1>
+              <div className="flex mx-auto">
+                <img src={noDataImage} alt="No place found" className="w-[200px]" />
+              </div>
             )}
           </Grid>
         )}
