@@ -9,7 +9,6 @@ interface PlaceDetailsProps {
 };
 
 const PlaceDetails: React.FC<PlaceDetailsProps> = ({ place, selected, refProp }) => {
-    console.log('selected:', selected, refProp);
     if (selected) {
         refProp?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }

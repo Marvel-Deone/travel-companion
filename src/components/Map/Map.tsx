@@ -12,7 +12,7 @@ interface MapProps {
   setChildClicked: (i: number) => void;
 }
 
-const Map: React.FC<MapProps> = ({ setCoordinates, setBounds, coordinates, bounds, places, setChildClicked }) => {
+const Map: React.FC<MapProps> = ({ setCoordinates, setBounds, coordinates, places, setChildClicked }) => {
   const isDesktop = useMediaQuery("(min-width: 600px)");
   const mapRef = useRef<google.maps.Map | null>(null);
   const lastBoundsRef = useRef<{ ne: { lat: number; lng: number }; sw: { lat: number; lng: number } } | null>(null);
@@ -75,7 +75,6 @@ const Map: React.FC<MapProps> = ({ setCoordinates, setBounds, coordinates, bound
   };
 
   const onChildClick = (i: number) => {
-    console.log('child clicked:', i);
     setChildClicked(i);
   }
 

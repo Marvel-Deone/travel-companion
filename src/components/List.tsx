@@ -27,8 +27,7 @@ const setRefs = (...refs: any[]) => (node: HTMLDivElement | null) => {
 
 const List: React.FC<ListProps> = ({ isLoading, places, type, setType, rating, setRating, childClicked }) => {
   const [elRefs, setElRefs] = useState([]);
-  console.log('childClicked:', childClicked);
-
+  
   useEffect(() => {
     setElRefs((refs) => Array(places?.length).fill(null).map((_, i) => refs[i] || createRef()))
   }, [places]);

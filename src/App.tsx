@@ -5,14 +5,14 @@ import Grid from '@mui/joy/Grid';
 import Map from './components/Map/Map';
 import List from './components/List';
 import { useEffect, useRef, useState } from 'react';
-import { debounce, set } from 'lodash';
+import { debounce } from 'lodash';
 import { getPlaceData } from './api';
 
 function App() {
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number }>({ lat: 12.838442, lng: 109.095887 });
   const [bounds, setBounds] = useState<{ ne: { lat: number; lng: number }; sw: { lat: number; lng: number } } | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [type, setType] = useState<string>('hotels');
+  const [type, setType] = useState<string>('restaurants');
   const [rating, setRating] = useState<string>('');
   const [places, setPlaces] = useState<any[]>([]);
   const [filteredPlaces, setFilteredPlaces] = useState<any[]>([]);
