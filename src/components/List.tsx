@@ -2,7 +2,7 @@ import Grid from "@mui/joy/Grid";
 import { CircularProgress, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 import PlaceDetails from "./PlaceDetails";
 import { createRef, useCallback, useEffect, useRef, useState } from "react";
-import noDataImage from '../assets/images/no-data.svg'; // adjust the path based on your component location
+import emptyImage from '../assets/images/empty.svg'; // adjust the path based on your component location
 
 
 interface ListProps {
@@ -91,7 +91,7 @@ const List: React.FC<ListProps> = ({ isLoading, places, type, setType, rating, s
               }
               )) : (
               <div className="flex mx-auto">
-                <img src={noDataImage} alt="No place found" className="w-[200px]" />
+                <img src={emptyImage} alt="No place found" className="w-[200px]" />
               </div>
             )}
           </Grid>

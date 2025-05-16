@@ -2,6 +2,7 @@ import { Paper, Rating, Typography, useMediaQuery } from "@mui/material";
 import { GoogleMap, Marker, OverlayView } from "@react-google-maps/api";
 import { debounce } from "lodash";
 import React, { useRef } from "react";
+import mapStlyes from "./mapStyles";
 
 interface MapProps {
   setCoordinates: (coords: { lat: number; lng: number }) => void;
@@ -86,6 +87,11 @@ const Map: React.FC<MapProps> = ({ setCoordinates, setBounds, coordinates, place
         zoom={14}
         onLoad={onLoad}
         onIdle={onIdle}
+         options={{
+                    disableDefaultUI: true,
+                    zoomControl: true,
+                    styles: mapStlyes,
+                }}
       >
         {Array.isArray(places) && places?.map((place, i) => (
           <Marker
